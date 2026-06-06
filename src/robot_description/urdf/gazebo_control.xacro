@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <gazebo>
+        <plugin filename="libgz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+            <left_joint>left_rear_wheel_joint</left_joint>
+            <right_joint>right_rear_wheel_joint</right_joint>
+            <wheel_separation>${base_width - wheel_width}</wheel_separation>
+            <wheel_radius>${wheel_radius}</wheel_radius>
+            <update_rate>100.0</update_rate>
+            <odom_publish_frequency>10.0</odom_publish_frequency>
+            <topic_name>/cmd_vel</topic_name>
+
+            <wheel_acceleration>2.0</wheel_acceleration>
+            <wheel_torque>10.0</wheel_torque>
+            <max_linear_speed>2.0</max_linear_speed>
+            <max_angular_speed>1.57</max_angular_speed>
+
+            <odom_frame_id>/odom</odom_frame_id>
+            <child_frame_id>/base_link</child_frame_id>
+            <odom_topic>/odom</odom_topic>
+            <tf_topic>/tf</tf_topic>
+
+        </plugin>
+
+        <plugin filename="libgz-sim-joint-state-publisher" name="gz::sim::systems::JointStatePublisher">
+            <joint_name>left_rear_wheel_joint</joint_name>
+            <joint_name>right_rear_wheel_joint</joint_name>
+            <update_rate>50.0</update_rate>
+            <joint_state_topic>/joint_states</joint_state_topic>    
+        
+        </plugin>
+    </gazebo>
+</robot>

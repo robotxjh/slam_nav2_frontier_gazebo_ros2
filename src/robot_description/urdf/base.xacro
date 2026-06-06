@@ -1,19 +1,17 @@
 <?xml version="1.0"?>
 <robot name="car_robot" xmlns:xacro="http://www.ros.org/wiki/xacro" >
 
-    <xacro:property name="base_length" value="0.53"/>
+    <xacro:property name="base_length" value="0.66"/>
     <xacro:property name="base_width" value="0.36"/>
     <xacro:property name="base_height" value="0.20"/>
-    <xacro:property name="wheel_radius" value="0.08"/>
+    <xacro:property name="wheel_radius" value="0.10"/>
     <xacro:property name="wheel_width" value="0.03"/>
 
     <!-- base-link -->
     <link name="base_footprint">
         <visual>
             <geometry>
-                <geometry>
-                    <sphere radius="0.0001"/>
-                </geometry>
+               <sphere radius="0.0001"/>
             </geometry>
         </visual>
     </link>
@@ -32,12 +30,12 @@
                 <geometry>
                     <box size="${base_length} ${base_width} ${base_height}"/>
                 </geometry>
-                <origin xyz="0.0 0.0 ${base_height/2}" rpy="0.0 0.0 0.0"/>
+                <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
         </collision>
         <xacro:box_inertia 
             m="1.0" 
             x="${base_length}" y="${base_width}" z="${base_height}" 
-            o_xyz="0.0 0.0 ${base_height/2}" 
+            o_xyz="0.0 0.0 0.0" 
             o_rpy="0.0 0.0 0.0"/>
     </link>
 
@@ -56,9 +54,7 @@
             </visual>
             <collision>
                 <geometry>
-                    <geometry>
-                        <sphere radius="${wheel_radius}"/>
-                    </geometry>/>
+                   <sphere radius="${wheel_radius}"/>
                 </geometry>
                 <origin xyz="0.0 0.0 0.0" rpy="1.5708 0.0 0.0"/>
             </collision>
@@ -100,14 +96,14 @@
     <joint name="base_2_footprint_joint" type="fixed">
         <parent link="base_footprint"/>
         <child link="base_link"/>
-        <origin xyz="0.0 0.0 ${(wheel_radius + base_height)/2}" rpy="0.0 0.0 0.0"/>
+        <origin xyz="0.0 0.0 ${wheel_radius + (base_height)/2}" rpy="0.0 0.0 0.0"/>
     </joint>
 
     <!-- rear_left_wheel_joint -->
     <joint name="left_rear_wheel_joint" type="continuous">
         <parent link="base_link"/>
         <child link="wheel_rear_left"/>
-        <origin xyz="${-(base_length/4)} ${(base_width - wheel_width)/2} -base_height/2" rpy="0.0 0.0 0.0"/>
+        <origin xyz="${-(base_length/4)} ${(base_width - wheel_width)/2} -${base_height/2}" rpy="0.0 0.0 0.0"/>
         <axis xyz="0.0 1.0 0.0"/>
     </joint>
 
@@ -115,7 +111,7 @@
     <joint name="right_rear_wheel_joint" type="continuous">
         <parent link="base_link"/>
         <child link="wheel_rear_right"/>
-        <origin xyz="${-(base_length/4)} ${-(base_width - wheel_width)/2} -base_height/2" rpy="0.0 0.0 0.0"/>
+        <origin xyz="${-(base_length/4)} ${-(base_width - wheel_width)/2} -${base_height/2}" rpy="0.0 0.0 0.0"/>
         <axis xyz="0.0 1.0 0.0"/>
     </joint>
 
@@ -123,6 +119,6 @@
     <joint name="caster_wheel_joint" type="fixed">
         <parent link="base_link"/>
         <child link="caster_wheel"/>
-        <origin xyz="${(base_length/4)} 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <origin xyz="${(base_length/4)} 0.0 -${base_height/2}" rpy="0.0 0.0 0.0"/>
     </joint>
 </robot>

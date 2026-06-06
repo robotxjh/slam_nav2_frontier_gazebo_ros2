@@ -3,4 +3,6 @@
     <xacro:include filename="$(find robot_description)/urdf/common_macro.xacro" />
     <xacro:include filename="$(find robot_description)/urdf/base.xacro" />
     <xacro:include filename="$(find robot_description)/urdf/camera.xacro"/>
+    <xacro:include filename="$(find robot_description)/urdf/lidar.xacro"/>
+    <xacro:include filename="$(find robot_description)/urdf/gazebo_control.xacro"/>
 </robot>
