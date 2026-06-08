@@ -113,8 +113,7 @@ def generate_launch_description():
     spawn_robot = Node(
         package='ros_gz_sim',
         executable='create',
-        arguments=[
-            '-name', 'my_robot',
+        arguments=[             #此处不能加name 参数，否则导致产生命名空间，tf树不完整，导致机器人不能转弯
             '-topic', 'robot_description',  # 从 robot_state_publisher 获取模型数据
             '-x', '0.0',
             '-y', '0.0',
