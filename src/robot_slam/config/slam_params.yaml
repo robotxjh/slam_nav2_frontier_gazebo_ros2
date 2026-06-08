@@ -1,0 +1,26 @@
+slam_toolbox:
+  ros__parameters:
+    use_sim_time: true
+    mode: mapping   #mapping建图，localization定位
+
+    base_frame: base_footprint
+    odom_frame: odom
+    map_frame: map
+    scan_topic: /scan        #激光雷达话题，必须和gz_bridge 中的话题一致
+    odom_topic: /odom
+    map_topic: /map
+
+    #性能参数
+    resolution: 0.05          #地图分辨率，单位为米/像素
+    map_update_interval: 1.0 #地图更新间隔，单位为秒
+    max_laser_range: 10.0    #激光雷达最大有效距离，单位为米
+    min_laser_range: 0.1    
+    minimum_travel_rotation: 0.1 #最小旋转角度，单位为弧度
+    minimum_travel_distance: 0.5   # 机器人移动多远更新一次地图
+    minimum_travel_heading: 0.5    # 机器人转多少角度更新一次地图
+
+    # 地图保存
+    map_file_name: ~/my_robot_ws/src/robot_slam/maps/map
+    map_start_at_dock: true
+
+

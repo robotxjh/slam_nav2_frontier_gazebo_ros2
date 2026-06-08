@@ -35,28 +35,4 @@
         <origin xyz="${-(base_length/4)} 0.0 ${(base_height + lidar_length)/2}" rpy="0.0 0.0 0.0"/>
     </joint>
 
-    <gazebo reference="lidar_link">
-        <sensor type="lidar" name="gpu_lidar">
-            <pose>0 0 0 0 0 0</pose>
-            <visualize>true</visualize>
-            <update_rate>10</update_rate>
-            <topic>/scan</topic>
-            <gz_frame_id>lidar_link</gz_frame_id>
-            <lidar>
-                <scan>
-                    <horizontal>
-                        <samples>720</samples>
-                        <min_angle>-3.14</min_angle>
-                        <max_angle>3.14</max_angle>
-                    </horizontal>
-                </scan>
-                <range>
-                    <min>0.1</min>
-                    <max>10.0</max>
-                    <resolution>0.01</resolution>
-                </range>
-            </lidar>
-        </sensor>
-    </gazebo>
-
 </robot>
