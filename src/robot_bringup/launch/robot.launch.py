@@ -63,17 +63,19 @@ def generate_launch_description():
     )
 
     ros_gz_bridge_node = Node(
-        package="ros_gz_bridge",
-        executable="parameter_bridge",
-        name="ros_gz_bridge_node",
-        output="screen",
-        arguments=[
-        '/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist',           # 速度控制 ROS2→GZ
-        '/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry',             # 里程计 GZ→ROS2
-        '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',        # 激光雷达 GZ→ROS2
-        '/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V',                # TF变换 GZ→ROS2
-        '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',             # 仿真时钟 GZ→ROS2
-    ])
+    package="ros_gz_bridge",
+    executable="parameter_bridge",
+    name="ros_gz_bridge_node",
+    output="screen",
+    arguments=[
+        '/cmd_vel@geometry_msgs/msg/Twist]gz.msgs.Twist',                    # ROS→Gazebo ✅
+        '/odom@nav_msgs/msg/Odometry[gz.msgs.Odometry',                      # Gazebo→ROS ✅
+        '/scan@sensor_msgs/msg/LaserScan[gz.msgs.LaserScan',                 # Gazebo→ROS ✅
+        '/tf@tf2_msgs/msg/TFMessage[gz.msgs.Pose_V',                         # Gazebo→ROS ✅
+        '/clock@rosgraph_msgs/msg/Clock[gz.msgs.Clock',                      # Gazebo→ROS ✅
+        '/world/empty/model/my_robot/joint_state@sensor_msgs/msg/JointState[gz.msgs.Model',  # Gazebo→ROS ✅
+    ]
+)
 
     headless = LaunchConfiguration('headless', default='false')
     teleop = LaunchConfiguration('teleop', default='true')

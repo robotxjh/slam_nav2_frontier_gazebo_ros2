@@ -23,10 +23,11 @@
             <min_angular_acceleration>-3.14</min_angular_acceleration>
         </plugin>
 
-        <plugin filename="gz-sim-joint-state-publisher" name="gz::sim::systems::JointStatePublisher">
-            <joint_name>left_rear_wheel_joint</joint_name>
+            <plugin filename="gz-sim-joint-state-publisher-system" name="gz::sim::systems::JointStatePublisher">
             <joint_name>right_rear_wheel_joint</joint_name>
+            <joint_name>left_rear_wheel_joint</joint_name>
             <update_rate>50.0</update_rate>
+            
         </plugin>
 
     </gazebo>
@@ -39,34 +40,42 @@
     <!-- 轮子颜色 -->
     <gazebo reference="left_rear_wheel">
         <material>Gazebo/Green</material>
-        <mu1>1.0</mu1>
-        <mu2>1.0</mu2>
-        <kp>1000000.0</kp>
+        <mu1>100.0</mu1>
+        <mu2>100.0</mu2>
+        <kp>10000000.0</kp>
         <kd>1.0</kd>
+        <minDepth>0.001</minDepth>
+        <maxVel>0.1</maxVel>
     </gazebo>
 
     <gazebo reference="right_rear_wheel">
         <material>Gazebo/Green</material>
-        <mu1>1.0</mu1>
-        <mu2>1.0</mu2>
-        <kp>1000000.0</kp>
+        <mu1>100.0</mu1>
+        <mu2>100.0</mu2>
+        <kp>10000000.0</kp>
         <kd>1.0</kd>
+        <minDepth>0.001</minDepth>
+        <maxVel>0.1</maxVel>
     </gazebo>
 
     <gazebo reference="left_front_wheel">
         <material>Gazebo/Green</material>
-        <mu1>1.0</mu1>
-        <mu2>1.0</mu2>
-        <kp>1000000.0</kp>
+        <mu1>100.0</mu1>
+        <mu2>100.0</mu2>
+        <kp>10000000.0</kp>
         <kd>1.0</kd>
+        <minDepth>0.001</minDepth>
+        <maxVel>0.1</maxVel>
     </gazebo>
 
     <gazebo reference="right_front_wheel">
         <material>Gazebo/Green</material>
-        <mu1>1.0</mu1>
-        <mu2>1.0</mu2>
-        <kp>1000000.0</kp>
+        <mu1>100.0</mu1>
+        <mu2>100.0</mu2>
+        <kp>10000000.0</kp>
         <kd>1.0</kd>
+        <minDepth>0.001</minDepth>
+        <maxVel>0.1</maxVel>
     </gazebo>
 
     <!-- 相机 -->

@@ -33,7 +33,7 @@
                 <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
         </collision>
         <xacro:box_inertia 
-            m="1.0" 
+            m="10.0" 
             x="${base_length}" y="${base_width}" z="${base_height}" 
             o_xyz="0.0 0.0 0.0" 
             o_rpy="0.0 0.0 0.0"/>
@@ -59,7 +59,7 @@
                
             </collision>
             <xacro:cylinder_inertia
-                m="2.0"
+                m="0.5"
                 r="${wheel_radius}" l="${wheel_width}"
                 o_xyz="0.0 0.0 0.0"
                 o_rpy="1.5708 0.0 0.0"/>
