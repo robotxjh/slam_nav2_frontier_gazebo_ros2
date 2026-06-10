@@ -11,7 +11,7 @@
             l="0.05" 
             o_xyz="0.0 0.0 0.0" 
             o_rpy="0.0 0.0 0.0"/>
-        <visual name="">
+        <visual >
             <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
             <geometry>
                  <cylinder radius="${lidar_radius}" length="${lidar_length}"/>

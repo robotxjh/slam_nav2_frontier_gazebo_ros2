@@ -1,4 +1,7 @@
 from setuptools import find_packages, setup
+import os
+from glob import glob
+
 
 package_name = 'robot_gazebo'
 
@@ -10,6 +13,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
+        (os.path.join('share', package_name, 'worlds'), glob('worlds/*.sdf')),
+        (os.path.join('share', package_name, 'config'),glob('config/*.yaml'))    
     ],
     install_requires=['setuptools'],
     zip_safe=True,

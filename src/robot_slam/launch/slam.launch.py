@@ -18,8 +18,10 @@ from launch.actions import IncludeLaunchDescription
 # from launch.actions import ExecuteProcess, RegisterEventHandler,LogInfo
 # 获取功能包下share目录路径-------
 from ament_index_python.packages import get_package_share_directory
+from launch.actions import TimerAction, ExecuteProcess
 
 def generate_launch_description():
+    
     slam_params = os.path.join(
         get_package_share_directory('robot_slam'),
         'config',
@@ -30,7 +32,33 @@ def generate_launch_description():
         executable='async_slam_toolbox_node',
         name='async_slam_toolbox_node',
         output='screen',
-        parameters=[slam_params]
+        parameters=[slam_params,
+                    {'use_sim_time': True,
+                     'odom_frame': 'odom'}]
+        
         )
     
-    return LaunchDescription([slam_toolbox_node])
+    # 延迟10秒自动激活SLAM
+    activate_slam = TimerAction(
+        period=10.0,
+        actions=[
+            ExecuteProcess(
+                cmd=['ros2', 'lifecycle', 'set', 
+                    '/async_slam_toolbox_node', 'configure'],
+                output='screen'
+            )
+        ]
+    )
+
+    activate_slam2 = TimerAction(
+        period=13.0,
+        actions=[
+            ExecuteProcess(
+                cmd=['ros2', 'lifecycle', 'set',
+                    '/async_slam_toolbox_node', 'activate'],
+                output='screen'
+            )
+        ]
+    )
+    
+    return LaunchDescription([slam_toolbox_node, activate_slam, activate_slam2])

@@ -1,5 +1,6 @@
-slam_toolbox:
+async_slam_toolbox_node:
   ros__parameters:
+    transform_publish_period: 0.02
     use_sim_time: true
     mode: mapping   #mapping建图，localization定位
 
@@ -12,8 +13,8 @@ slam_toolbox:
 
     #性能参数
     resolution: 0.05          #地图分辨率，单位为米/像素
-    map_update_interval: 1.0 #地图更新间隔，单位为秒
-    max_laser_range: 10.0    #激光雷达最大有效距离，单位为米
+    map_update_interval: 5.0 #地图更新间隔，单位为秒
+    max_laser_range: 20.0    #激光雷达最大有效距离，单位为米
     min_laser_range: 0.1    
     minimum_travel_rotation: 0.1 #最小旋转角度，单位为弧度
     minimum_travel_distance: 0.5   # 机器人移动多远更新一次地图
@@ -22,5 +23,9 @@ slam_toolbox:
     # 地图保存
     map_file_name: ~/my_robot_ws/src/robot_slam/maps/map
     map_start_at_dock: true
+
+    #更快、更省内存地处理大规模的位姿图优化，是slam_toolbox的默认高性能配置
+    solver_plugin: solver_plugins::CeresSolver
+    ceres_linear_solver: SPARSE_NORMAL_CHOLESKY
 
 

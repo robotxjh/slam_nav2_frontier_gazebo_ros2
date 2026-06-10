@@ -95,7 +95,7 @@
     </link> -->
 
     <!-- base_2_footprint_joint -->
-    <joint name="base_2_footprint_joint" type="fixed">
+    <joint name="base_footprint_joint" type="fixed">
         <parent link="base_footprint"/>
         <child link="base_link"/>
         <origin xyz="0.0 0.0 ${wheel_radius + (base_height)/2}" rpy="0.0 0.0 0.0"/>

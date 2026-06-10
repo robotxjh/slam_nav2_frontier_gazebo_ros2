@@ -11,7 +11,10 @@
             <topic>/cmd_vel</topic>
             <odom_topic>/odom</odom_topic>
             <tf_topic>/tf</tf_topic>
-            <odom_frame_id>odom</odom_frame_id>
+            <!-- 此处不是odom_frame_id,否则不能发布odom话题，tf_tree上没有odom，如果使用odom_frame_id,
+            则这个标签不起作用，系统会使用默认的odom话题，并给他加上命名空间，这个命名空间会和my_robot.urdf.xacro
+            文件中的robot标签 中的name属性值一样-->
+            <frame_id>odom</frame_id>        
             <child_frame_id>base_footprint</child_frame_id>
             <max_linear_velocity>2.0</max_linear_velocity>
             <min_linear_velocity>-2.0</min_linear_velocity>
@@ -86,23 +89,25 @@
 
     <!-- 相机 -->
     <gazebo reference="camera_link">
-        <pose>0 0 0 0 0 0</pose>
-        <visualize>true</visualize>
-        <update_rate>30</update_rate>
-        <topic>/camera/image_raw</topic>
-        <gz_frame_id>camera_link</gz_frame_id>
-        <camera>
-            <horizontal_fov>1.5708</horizontal_fov>
-            <image>
-                <width>640</width>
-                <height>480</height>
-                <format>R8G8B8</format>
-            </image>
-            <clip>
-                <near>0.1</near>
-                <far>100.0</far>
-            </clip>
-        </camera>
+        <sensor name='camera' type='camera'> 
+            <pose>0 0 0 0 0 0</pose>
+            <visualize>true</visualize>
+            <update_rate>30</update_rate>
+            <topic>/camera/image_raw</topic>
+            <gz_frame_id>camera_link</gz_frame_id>
+            <camera>
+                <horizontal_fov>1.5708</horizontal_fov>
+                <image>
+                    <width>640</width>
+                    <height>480</height>
+                    <format>R8G8B8</format>
+                </image>
+                <clip>
+                    <near>0.1</near>
+                    <far>100.0</far>
+                </clip>
+            </camera>
+        </sensor>
     </gazebo>
 
     <!-- 雷达 -->
