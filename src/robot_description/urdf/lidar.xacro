@@ -32,7 +32,7 @@
     <joint name="lidar_base_joint" type="fixed">
         <parent link="base_link"/>
         <child link="lidar_link"/>
-        <origin xyz="${-(base_length/4)} 0.0 ${(base_height + lidar_length)/2}" rpy="0.0 0.0 0.0"/>
+        <origin xyz="0.0 0.0 ${(base_height/2 + lidar_length/2 + 0.1)}" rpy="0.0 0.0 0.0"/>
     </joint>
 
 </robot>
