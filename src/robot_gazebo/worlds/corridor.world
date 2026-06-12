@@ -84,7 +84,7 @@
         <material><ambient>0.5 0.5 0.6 1</ambient><diffuse>0.5 0.5 0.6 1</diffuse></material></visual></link></model>
 
     <!-- ── Main horizontal corridor walls (y = ±1) ───────────── -->
-    <model name='corr_N'><static>true</static><pose>0 1 1 0 0 0</pose>
+    <!-- <model name='corr_N'><static>true</static><pose>0 1 1 0 0 0</pose>
       <link name='l'><collision name='c'><geometry><box><size>18 0.2 2</size></box></geometry></collision>
       <visual name='v'><geometry><box><size>18 0.2 2</size></box></geometry>
         <material><ambient>0.8 0.8 0.7 1</ambient><diffuse>0.8 0.8 0.7 1</diffuse></material></visual></link></model>
@@ -92,7 +92,7 @@
     <model name='corr_S'><static>true</static><pose>0 -1 1 0 0 0</pose>
       <link name='l'><collision name='c'><geometry><box><size>18 0.2 2</size></box></geometry></collision>
       <visual name='v'><geometry><box><size>18 0.2 2</size></box></geometry>
-        <material><ambient>0.8 0.8 0.7 1</ambient><diffuse>0.8 0.8 0.7 1</diffuse></material></visual></link></model>
+        <material><ambient>0.8 0.8 0.7 1</ambient><diffuse>0.8 0.8 0.7 1</diffuse></material></visual></link></model> -->
 
     <!-- ── Room A — top-left (x: -8 to -2, y: 1 to 8) ────────── -->
     <!-- West inner wall with doorway gap at y=5 -->

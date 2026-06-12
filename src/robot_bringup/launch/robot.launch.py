@@ -37,12 +37,21 @@ def generate_launch_description():
 
     robot_description = ParameterValue(Command(['xacro ', urdf_path]), value_type=str)
 
+    declare_slam = DeclareLaunchArgument(
+        'slam',
+         default_value='true',
+        description='是否启动 slam'
+    )
+
+    slam = LaunchConfiguration('slam')
+
     slam_launch_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_path('robot_slam'),
                          'launch', 'slam.launch.py')
                         ),
-                         launch_arguments={'use_sim_time': 'true'}.items()
+                         launch_arguments={'use_sim_time': 'true'}.items(),
+                         condition=IfCondition(slam)
     )
 
     robot_state_publisher_node = Node(
@@ -117,6 +126,7 @@ def generate_launch_description():
         gazebo,
         spawn_robot,
         teleop_node,
+        declare_slam,
         slam_launch_node,
     ])
 
