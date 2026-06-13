@@ -4,6 +4,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.substitutions import LaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
+from launch_ros.actions import Node
 
 
 def generate_launch_description():
@@ -42,11 +43,34 @@ def generate_launch_description():
             ('map', LaunchConfiguration('map')),
             ('params_file', nav2_params_path),
             ('use_sim_time', LaunchConfiguration('use_sim_time')),
+            ('autostart', 'True')
         ]
     )
+
+    # lifecycle_manager_navigation = Node(
+    # package='nav2_lifecycle_manager',
+    # executable='lifecycle_manager',
+    # name='lifecycle_manager_navigation',
+    # output='screen',
+    # parameters=[{
+    #     'use_sim_time': use_sim_time,
+    #     'autostart': True,
+    #     'node_names': [
+    #         'controller_server',
+    #         'smoother_server',
+    #         'planner_server',
+    #         'behavior_server',
+    #         'bt_navigator',
+    #         'waypoint_follower',
+    #         'velocity_smoother'
+    #         ]
+    #     }]
+    # )
 
     return LaunchDescription([
         declare_use_sim_time,
         declare_map,
         nav2_bringup,
+        # lifecycle_manager_navigation
+    
     ])

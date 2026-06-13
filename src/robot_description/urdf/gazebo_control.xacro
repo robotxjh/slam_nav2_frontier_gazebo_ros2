@@ -45,46 +45,30 @@
     <!-- 轮子颜色 -->
     <gazebo reference="left_rear_wheel">
         <material>Gazebo/Green</material>
-        <mu1>1.5</mu1>
-        <mu2>1.5</mu2>
-        <kp>10000000.0</kp>
-        <kd>1.0</kd>
-        <fdir1>1 0 0</fdir1>
-        <minDepth>0.001</minDepth>
-        <maxVel>0.01</maxVel>
+        <mu1>1.0</mu1>
+        <mu2>1.0</mu2>
+        
     </gazebo>
 
     <gazebo reference="right_rear_wheel">
         <material>Gazebo/Green</material>
-        <mu1>1.5</mu1>
-        <mu2>1.5</mu2>
-        <kp>10000000.0</kp>
-        <kd>1.0</kd>
-        <fdir1>1 0 0</fdir1>
-        <minDepth>0.001</minDepth>
-        <maxVel>0.01</maxVel>
+        <mu1>1.0</mu1>
+        <mu2>1.0</mu2>
+        
     </gazebo>
 
     <gazebo reference="left_front_wheel">
         <material>Gazebo/Green</material>
-        <mu1>1.0</mu1>
-        <mu2>1.0</mu2>
-        <kp>10000000.0</kp>
-        <kd>1.0</kd>
-        <fdir1>1 0 0</fdir1>        
-        <minDepth>0.001</minDepth>
-        <maxVel>0.1</maxVel>
+        <mu1>0.000001</mu1>
+        <mu2>0.000001</mu2>
+        
     </gazebo>
 
     <gazebo reference="right_front_wheel">
         <material>Gazebo/Green</material>
-        <mu1>1.0</mu1>
-        <mu2>1.0</mu2>
-        <kp>10000000.0</kp>
-        <kd>1.0</kd>
-        <fdir1>1 0 0</fdir1>
-        <minDepth>0.001</minDepth>
-        <maxVel>0.1</maxVel>
+        <mu1>0.000001</mu1>
+        <mu2>0.000001</mu2>
+        
     </gazebo>
 
     <!-- 相机 -->

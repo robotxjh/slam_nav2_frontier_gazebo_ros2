@@ -212,11 +212,16 @@ collision_monitor:
     cmd_vel_out_topic: "cmd_vel"
     transform_tolerance: 0.2
     source_timeout: 1.0
-    # polygons: []
+    polygons: ["StopBox"]
+    StopBox:
+      type: "polygon"
+      action_type: "stop"
+      points: "[[0.30,0.25],[0.30,-0.25],[-0.20,-0.25],[-0.20,0.25]]"
+      min_points: 4
+      visualize: true
+      enabled: true
     observation_sources: ["scan"]
     scan:
       type: "scan"
-      topic: "scan"
-      min_height: 0.15
-      max_height: 2.0
-      enabled: True
+      topic: "/scan"
+      enabled: true
