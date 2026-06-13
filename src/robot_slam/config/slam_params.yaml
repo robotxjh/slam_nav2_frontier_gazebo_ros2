@@ -22,9 +22,9 @@ async_slam_toolbox_node:
     scan_buffer_size: 30   #激光雷达数据缓冲区大小，单位为帧数
     transform_timeout: 0.5 #tf变换超时时间，单位为秒
 
-    # 地图保存
-    map_file_name: ~/my_robot_ws/src/robot_navigation/maps/map
-    map_start_at_dock: true
+    # 加载地图继续建图
+    # map_file_name: ~/my_robot_ws/src/robot_navigation/maps/map
+    # map_start_at_dock: true
 
     #更快、更省内存地处理大规模的位姿图优化，是slam_toolbox的默认高性能配置
     solver_plugin: solver_plugins::CeresSolver

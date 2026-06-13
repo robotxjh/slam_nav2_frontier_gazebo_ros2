@@ -41,13 +41,6 @@
   gz_type_name: "gz.msgs.Pose_V"
   direction: GZ_TO_ROS
 
-# 3D LiDAR PointCloud2 (only active when lidar3d.xacro is used)
-- ros_topic_name: "/points"
-  gz_topic_name: "/points"
-  ros_type_name: "sensor_msgs/msg/PointCloud2"
-  gz_type_name: "gz.msgs.PointCloudPacked"
-  direction: GZ_TO_ROS
-
 # RGB camera (camera.xacro)
 - ros_topic_name: "/camera/image_raw"
   gz_topic_name: "/camera/image_raw"
