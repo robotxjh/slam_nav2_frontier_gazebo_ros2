@@ -20,9 +20,9 @@ from ament_index_python.packages import get_package_share_path
 import os
 from launch_ros.parameter_descriptions import ParameterValue
 from launch.substitutions import Command
-from launch.actions import DeclareLaunchArgument
-from launch.substitutions import LaunchConfiguration, PythonExpression
-from launch.conditions import IfCondition, UnlessCondition
+from launch.actions import DeclareLaunchArgument,TimerAction
+from launch.substitutions import LaunchConfiguration
+from launch.conditions import IfCondition
 
 
 def generate_launch_description():
@@ -34,24 +34,56 @@ def generate_launch_description():
                                'worlds', 'corridor.world')
     bridge_config_path = os.path.join(get_package_share_path('robot_gazebo'),
                                      'config', 'bridge_config.yaml')
-
+    # ekf_path = os.path.join(get_package_share_path('robot_navigation'),
+    #                         'config', 'ekf.yaml')
+    
     robot_description = ParameterValue(Command(['xacro ', urdf_path]), value_type=str)
 
     declare_slam = DeclareLaunchArgument(
         'slam',
-         default_value='true',
+         default_value='True',
         description='是否启动 slam'
     )
 
+    declare_navigation = DeclareLaunchArgument(
+        'navigation',
+        default_value='True',
+        description='是否启动 navigation'
+    )
+
+    declare_use_sim_time = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='True',
+        description='是否use_sim_time'
+    )
+
+    use_sim_time = LaunchConfiguration('use_sim_time')
     slam = LaunchConfiguration('slam')
+    navigation = LaunchConfiguration('navigation')
 
     slam_launch_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_path('robot_slam'),
-                         'launch', 'slam.launch.py')
-                        ),
-                         launch_arguments={'use_sim_time': 'true'}.items(),
-                         condition=IfCondition(slam)
+                'launch',
+                'slam.launch.py'
+            )
+        ),
+        condition=IfCondition(slam)
+    )
+
+    navigation_launch_node = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(get_package_share_path('robot_navigation'),
+                'launch',
+                'navigation.launch.py'
+            )
+        ),
+        condition=IfCondition(navigation)
+    )
+    
+    delayed_navigation = TimerAction(
+        period=3.0,
+        actions=[navigation_launch_node]
     )
 
     robot_state_publisher_node = Node(
@@ -59,22 +91,24 @@ def generate_launch_description():
         executable="robot_state_publisher",
         name="robot_state_publisher",
         parameters=[{"robot_description": robot_description,
-                     "use_sim_time": True}]
+                     "use_sim_time": use_sim_time,
+                     "publish_frequency": 30.0}]
     )
 
     joint_state_publisher_node = Node(
         package="joint_state_publisher",
         executable="joint_state_publisher",
         name="joint_state_publisher",
-        parameters=[{"use_sim_time": True}]
+        parameters=[{"use_sim_time": use_sim_time}]
     )
+
     rviz_node = Node(
         package="rviz2",
         executable="rviz2",
         name="rviz2",
         output="screen",
         arguments=['-d', rviz_config_path],
-        parameters=[{"use_sim_time": True}]
+        parameters=[{"use_sim_time": use_sim_time}]
     )
 
     ros_gz_bridge_node = Node(
@@ -83,7 +117,7 @@ def generate_launch_description():
     name="ros_gz_bridge_node",
     output="screen",
     parameters=[{
-        "use_sim_time": True,
+        "use_sim_time": use_sim_time,
         "config_file": bridge_config_path
     }]
 )
@@ -116,9 +150,23 @@ def generate_launch_description():
         name='teleop_twist_keyboard',
         output='screen',
         prefix='xterm -e',
+        parameters=[{'use_sim_time': use_sim_time}]  
     )
+
+    # ekf_node = Node(
+    #     package='robot_localization',
+    #     executable='ekf_node',
+    #     name='ekf_filter_node',
+    #     output='screen',
+    #     parameters=[ekf_path,
+    #                 {'use_sim_time': use_sim_time}]
+    # )
     
     return LaunchDescription([
+        declare_use_sim_time,
+        declare_slam,
+        declare_navigation,
+    
         robot_state_publisher_node,
         joint_state_publisher_node,
         rviz_node,
@@ -126,7 +174,9 @@ def generate_launch_description():
         gazebo,
         spawn_robot,
         teleop_node,
-        declare_slam,
         slam_launch_node,
+        delayed_navigation,
+        # ekf_node
+        
     ])
 

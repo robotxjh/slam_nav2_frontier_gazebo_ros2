@@ -21,10 +21,9 @@ def generate_launch_description():
 
     declare_use_sim_time = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='true',
+        default_value='True',
         description='使用仿真时间'
     )
-    use_sim_time = LaunchConfiguration('use_sim_time')
 
     declare_map = DeclareLaunchArgument(
         'map',
@@ -32,6 +31,9 @@ def generate_launch_description():
         description='地图yaml文件路径'
     )
 
+    map = LaunchConfiguration('map')
+    use_sim_time = LaunchConfiguration('use_sim_time')
+    
     nav2_bringup = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
@@ -39,33 +41,14 @@ def generate_launch_description():
                 'launch', 'bringup_launch.py'
             )
         ),
-        launch_arguments=[
-            ('map', LaunchConfiguration('map')),
-            ('params_file', nav2_params_path),
-            ('use_sim_time', LaunchConfiguration('use_sim_time')),
-            ('autostart', 'True')
-        ]
+        launch_arguments={
+            'map': map,
+            'params_file': nav2_params_path,
+            'use_sim_time': use_sim_time,
+            'autostart': 'True'
+        }.items()
     )
 
-    # lifecycle_manager_navigation = Node(
-    # package='nav2_lifecycle_manager',
-    # executable='lifecycle_manager',
-    # name='lifecycle_manager_navigation',
-    # output='screen',
-    # parameters=[{
-    #     'use_sim_time': use_sim_time,
-    #     'autostart': True,
-    #     'node_names': [
-    #         'controller_server',
-    #         'smoother_server',
-    #         'planner_server',
-    #         'behavior_server',
-    #         'bt_navigator',
-    #         'waypoint_follower',
-    #         'velocity_smoother'
-    #         ]
-    #     }]
-    # )
 
     return LaunchDescription([
         declare_use_sim_time,

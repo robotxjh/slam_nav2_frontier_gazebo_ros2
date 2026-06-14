@@ -30,6 +30,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
+            'frontier_explorer = robot_navigation.frontier_explorer:main'
         ],
     },
 )

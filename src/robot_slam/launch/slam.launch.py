@@ -21,6 +21,14 @@ from ament_index_python.packages import get_package_share_directory
 from launch.actions import TimerAction, ExecuteProcess
 
 def generate_launch_description():
+
+    declare_sim_time = DeclareLaunchArgument(
+        'use_sim_time',
+        default_value='true',
+        description='使用仿真时间'
+    )
+
+    use_sim_time = LaunchConfiguration('use_sim_time')
     
     slam_params = os.path.join(
         get_package_share_directory('robot_slam'),
@@ -33,7 +41,7 @@ def generate_launch_description():
         name='async_slam_toolbox_node',
         output='screen',
         parameters=[slam_params,
-                    {'use_sim_time': True,
+                    {'use_sim_time': use_sim_time,
                      'odom_frame': 'odom'}]
         
         )
@@ -61,4 +69,4 @@ def generate_launch_description():
         ]
     )
     
-    return LaunchDescription([slam_toolbox_node, activate_slam, activate_slam2])
+    return LaunchDescription([declare_sim_time,slam_toolbox_node, activate_slam, activate_slam2])
