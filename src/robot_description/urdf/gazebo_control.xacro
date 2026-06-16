@@ -7,7 +7,7 @@
             <right_joint>right_rear_wheel_joint</right_joint>
             <wheel_separation>${base_width - wheel_width}</wheel_separation>
             <wheel_radius>0.1</wheel_radius>
-            <odom_publish_frequency>10.0</odom_publish_frequency>
+            <odom_publish_frequency>50.0</odom_publish_frequency>
             <topic>/cmd_vel</topic>
             <odom_topic>/odom</odom_topic>
             <tf_topic>/tf</tf_topic>
@@ -42,32 +42,40 @@
         <material>Gazebo/Blue</material>
     </gazebo>
 
-    <!-- 轮子颜色 -->
+    <!-- 轮子属性 -->
     <gazebo reference="left_rear_wheel">
         <material>Gazebo/Green</material>
-        <mu1>1.0</mu1>
-        <mu2>1.0</mu2>
+        <mu1>10.0</mu1>     #切向摩擦系数
+        <mu2>10.0</mu2>     侧向摩擦系数
+        <kp>500000.0</kp>
+        <kd>5000.0</kd>
         
     </gazebo>
 
     <gazebo reference="right_rear_wheel">
         <material>Gazebo/Green</material>
-        <mu1>1.0</mu1>
-        <mu2>1.0</mu2>
+        <mu1>10.0</mu1>
+        <mu2>10.0</mu2>
+        <kp>500000.0</kp>
+        <kd>5000.0</kd>
         
     </gazebo>
 
     <gazebo reference="left_front_wheel">
         <material>Gazebo/Green</material>
-        <mu1>0.000001</mu1>
-        <mu2>0.000001</mu2>
+        <mu1>0.001</mu1>
+        <mu2>0.001</mu2>
+        <kp>500000.0</kp>
+        <kd>5000.0</kd>
         
     </gazebo>
 
     <gazebo reference="right_front_wheel">
         <material>Gazebo/Green</material>
-        <mu1>0.000001</mu1>
-        <mu2>0.000001</mu2>
+        <mu1>0.001</mu1>
+        <mu2>0.001</mu2>
+        <kp>500000.0</kp>
+        <kd>5000.0</kd>
         
     </gazebo>
 
@@ -76,7 +84,7 @@
         <sensor name='lidar' type='gpu_lidar'>
             <pose>0 0 0 0 0 0</pose>
             <visualize>true</visualize>
-            <update_rate>5</update_rate>
+            <update_rate>20</update_rate>
             <topic>/scan</topic>
             <gz_frame_id>lidar_link</gz_frame_id>
             <lidar>

@@ -57,9 +57,16 @@ def generate_launch_description():
         description='是否use_sim_time'
     )
 
+    declare_explorer = DeclareLaunchArgument(
+        'explorer',
+        default_value='true',
+        description='是否启动自主探索'
+    )
+
     use_sim_time = LaunchConfiguration('use_sim_time')
     slam = LaunchConfiguration('slam')
     navigation = LaunchConfiguration('navigation')
+    explorer = LaunchConfiguration('explorer')
 
     slam_launch_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -80,7 +87,16 @@ def generate_launch_description():
         ),
         condition=IfCondition(navigation)
     )
+
+    frontier_node = Node(
+        package='robot_navigation',
+        executable='frontier_explorer',
+        name='frontier_explorer',
+        output='screen',
+        condition=IfCondition(explorer)
+    )
     
+    # 导航节点延时启动
     delayed_navigation = TimerAction(
         period=3.0,
         actions=[navigation_launch_node]
@@ -92,7 +108,8 @@ def generate_launch_description():
         name="robot_state_publisher",
         parameters=[{"robot_description": robot_description,
                      "use_sim_time": use_sim_time,
-                     "publish_frequency": 30.0}]
+                     "publish_frequency": 30.0
+        }]
     )
 
     joint_state_publisher_node = Node(
@@ -166,6 +183,7 @@ def generate_launch_description():
         declare_use_sim_time,
         declare_slam,
         declare_navigation,
+        declare_explorer,
     
         robot_state_publisher_node,
         joint_state_publisher_node,
@@ -176,6 +194,7 @@ def generate_launch_description():
         teleop_node,
         slam_launch_node,
         delayed_navigation,
+        frontier_node,
         # ekf_node
         
     ])
