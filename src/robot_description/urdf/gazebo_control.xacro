@@ -9,8 +9,8 @@
             <wheel_radius>0.1</wheel_radius>
             <odom_publish_frequency>50.0</odom_publish_frequency>
             <topic>/cmd_vel</topic>
-            <odom_topic>/odom</odom_topic>
-            <tf_topic>/tf</tf_topic>
+            <odom_topic>/odom/unfiltered</odom_topic>
+            <tf_topic>/tf_raw</tf_topic>
             <!-- 此处不是odom_frame_id,否则不能发布odom话题，tf_tree上没有odom，如果使用odom_frame_id,
             则这个标签不起作用，系统会使用默认的odom话题，并给他加上命名空间，这个命名空间会和my_robot.urdf.xacro
             文件中的robot标签 中的name属性值一样-->
@@ -32,6 +32,7 @@
             <joint_name>left_front_wheel_joint</joint_name>
             <joint_name>right_front_wheel_joint</joint_name>
             <update_rate>50.0</update_rate>
+            <topic>/joint_states</topic> 
             
         </plugin>
 

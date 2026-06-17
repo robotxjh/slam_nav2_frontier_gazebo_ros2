@@ -55,5 +55,4 @@ def generate_launch_description():
         declare_map,
         nav2_bringup,
         # lifecycle_manager_navigation
-    
     ])

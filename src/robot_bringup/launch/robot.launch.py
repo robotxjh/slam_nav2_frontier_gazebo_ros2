@@ -22,8 +22,7 @@ from launch_ros.parameter_descriptions import ParameterValue
 from launch.substitutions import Command
 from launch.actions import DeclareLaunchArgument,TimerAction
 from launch.substitutions import LaunchConfiguration
-from launch.conditions import IfCondition
-
+from launch.conditions import IfCondition, UnlessCondition
 
 def generate_launch_description():
     urdf_path = os.path.join(get_package_share_path('robot_description'),
@@ -34,8 +33,8 @@ def generate_launch_description():
                                'worlds', 'corridor.world')
     bridge_config_path = os.path.join(get_package_share_path('robot_gazebo'),
                                      'config', 'bridge_config.yaml')
-    # ekf_path = os.path.join(get_package_share_path('robot_navigation'),
-    #                         'config', 'ekf.yaml')
+    ekf_path = os.path.join(get_package_share_path('robot_navigation'),
+                            'config', 'ekf.yaml')
     
     robot_description = ParameterValue(Command(['xacro ', urdf_path]), value_type=str)
 
@@ -63,10 +62,17 @@ def generate_launch_description():
         description='是否启动自主探索'
     )
 
+    declare_headless = DeclareLaunchArgument(
+        'headless',
+        default_value='false',
+        description='是否启动headless'
+    )
+
     use_sim_time = LaunchConfiguration('use_sim_time')
     slam = LaunchConfiguration('slam')
     navigation = LaunchConfiguration('navigation')
     explorer = LaunchConfiguration('explorer')
+    headless = LaunchConfiguration('headless')
 
     slam_launch_node = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
@@ -136,15 +142,29 @@ def generate_launch_description():
     parameters=[{
         "use_sim_time": use_sim_time,
         "config_file": bridge_config_path
-    }]
-)
+    }])
     
-
-    gazebo = IncludeLaunchDescription(
+    # 分支1：无界面 headless:=true,gui=false
+    gazebo_headless = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
-        os.path.join(get_package_share_path('ros_gz_sim'),
-        'launch', 'gz_sim.launch.py')),
-        launch_arguments=[('gz_args', '-r -v 4 ' + worlds_path)]
+            os.path.join(get_package_share_path('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
+        ),
+        launch_arguments=[
+            ('gz_args', ['-r -v -s 4 ', worlds_path]),
+            ('on_exit_shutdown', 'true'),
+        ],
+        condition=IfCondition(headless)
+    )
+
+    # 分支2：正常界面 headless:=false，gui=true
+    gazebo_gui = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(
+            os.path.join(get_package_share_path('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
+        ),
+        launch_arguments=[
+            ('gz_args', ['-r -v 4 ', worlds_path]),
+        ],
+        condition=UnlessCondition(headless)
     )
 
     # 在 Gazebo 中生成机器人模型
@@ -154,8 +174,8 @@ def generate_launch_description():
         arguments=[             #此处不能加name 参数，否则导致产生命名空间，tf树不完整，导致机器人不能转弯
             '-world', 'corridor',
             '-topic', 'robot_description',  # 从 robot_state_publisher 获取模型数据
-            '-x', '0.0',
-            '-y', '0.0',
+            '-x', '1.5',
+            '-y', '1.5',
             '-z', '0.0'  
         ],
         output='screen'
@@ -170,32 +190,37 @@ def generate_launch_description():
         parameters=[{'use_sim_time': use_sim_time}]  
     )
 
-    # ekf_node = Node(
-    #     package='robot_localization',
-    #     executable='ekf_node',
-    #     name='ekf_filter_node',
-    #     output='screen',
-    #     parameters=[ekf_path,
-    #                 {'use_sim_time': use_sim_time}]
-    # )
+    ekf_node = Node(
+        package='robot_localization',
+        executable='ekf_node',
+        name='ekf_filter_node',
+        output='screen',
+        parameters=[ekf_path,
+                    {'use_sim_time': use_sim_time}],
+        remappings=[
+        ('odometry/filtered', '/odom')]
+
+    )
     
     return LaunchDescription([
         declare_use_sim_time,
         declare_slam,
         declare_navigation,
         declare_explorer,
+        declare_headless,
     
         robot_state_publisher_node,
         joint_state_publisher_node,
         rviz_node,
         ros_gz_bridge_node,
-        gazebo,
+        gazebo_headless,
+        gazebo_gui,
         spawn_robot,
         teleop_node,
         slam_launch_node,
         delayed_navigation,
         frontier_node,
-        # ekf_node
+        ekf_node
         
     ])
 
