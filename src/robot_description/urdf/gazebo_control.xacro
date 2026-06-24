@@ -143,8 +143,9 @@
         </sensor>
     </gazebo> 
     
+    <!-- #不加插件，imu没有数据 -->
     <gazebo>
-      <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">
+      <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu">    
       </plugin>
     </gazebo>
 </robot>

@@ -30,7 +30,7 @@ def generate_launch_description():
     rviz_config_path = os.path.join(get_package_share_path('robot_description'),
                                     'rviz', 'rviz_config.rviz')
     worlds_path = os.path.join(get_package_share_path('robot_gazebo'),
-                               'worlds', 'corridor.world')
+                               'worlds', 'maze.world')
     bridge_config_path = os.path.join(get_package_share_path('robot_gazebo'),
                                      'config', 'bridge_config.yaml')
     ekf_path = os.path.join(get_package_share_path('robot_navigation'),
@@ -172,7 +172,7 @@ def generate_launch_description():
         package='ros_gz_sim',
         executable='create',
         arguments=[             #此处不能加name 参数，否则导致产生命名空间，tf树不完整，导致机器人不能转弯
-            '-world', 'corridor',
+            '-world', 'maze',
             '-topic', 'robot_description',  # 从 robot_state_publisher 获取模型数据
             '-x', '1.5',
             '-y', '1.5',
