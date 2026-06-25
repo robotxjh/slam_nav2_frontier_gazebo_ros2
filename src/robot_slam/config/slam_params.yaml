@@ -19,6 +19,7 @@ async_slam_toolbox_node:
     minimum_travel_rotation: 0.1 #最小旋转角度，单位为弧度
     minimum_travel_distance: 0.1   # 机器人移动多远更新一次地图
     minimum_travel_heading: 0.1    # 机器人转多少角度更新一次地图
+    throttle_scans: 2   # 每2帧处理1帧
     scan_buffer_size: 30   #激光雷达数据缓冲区大小，单位为帧数
     transform_timeout: 0.5 #tf变换超时时间，单位为秒
     link_match_minimum_response_fine: 0.05

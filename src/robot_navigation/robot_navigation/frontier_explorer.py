@@ -33,7 +33,7 @@ class FrontierExplorer(Node):
         self.failed_frontiers = deque(maxlen=50)  # 只定义一次
         
         # 探索间隔改为5秒，减少CPU压力
-        self.timer = self.create_timer(5.0, self.explore)
+        self.timer = self.create_timer(8.0, self.explore)
         self.get_logger().info('Frontier Explorer 启动!')
 
     def map_callback(self, msg):

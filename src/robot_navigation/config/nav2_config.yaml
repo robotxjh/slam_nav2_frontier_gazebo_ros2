@@ -136,8 +136,8 @@ controller_server:
 local_costmap:
   local_costmap:
     ros__parameters:
-      update_frequency: 5.0
-      publish_frequency: 2.0
+      update_frequency: 3.0
+      publish_frequency: 1.0
       global_frame: odom
       robot_base_frame: base_link
       rolling_window: true
@@ -178,8 +178,8 @@ local_costmap:
 global_costmap:
   global_costmap:
     ros__parameters:
-      update_frequency: 1.0
-      publish_frequency: 1.0
+      update_frequency: 0.5
+      publish_frequency: 0.5
       global_frame: map
       robot_base_frame: base_link
       robot_radius: 0.22
