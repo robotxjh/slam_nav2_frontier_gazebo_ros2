@@ -9,6 +9,7 @@ import math
 from rclpy.time import Time
 from rclpy.duration import Duration
 from collections import deque
+from scipy import ndimage
 
 class FrontierExplorer(Node):
     def __init__(self):
@@ -48,7 +49,7 @@ class FrontierExplorer(Node):
             transform = self.tf_buffer.lookup_transform(
                 'map', 'base_footprint',
                 Time(),
-                timeout=Duration(seconds=0.5)
+                timeout=Duration(seconds=0.5)   #lookup_transform函数是计算并返回坐标转换关系
             )
             return (transform.transform.translation.x,
                     transform.transform.translation.y)
@@ -56,11 +57,11 @@ class FrontierExplorer(Node):
             self.get_logger().warn(f'获取机器人位置失败: {e}')
             return None, None
 
-    def find_frontiers(self):
+    # def find_frontiers(self):
         if self.map_data is None or self.map_array is None:
             return []
 
-        # 用numpy向量化运算替代for循环，速度提升10-100倍
+        # 用numpy向量化运算替代for循环，速度大幅度提升
         data = self.map_array
         height, width = data.shape
 
@@ -105,6 +106,124 @@ class FrontierExplorer(Node):
 
         return frontiers
 
+
+    # def find_frontiers(self):
+        if self.map_data is None or self.map_array is None:
+            return []
+
+        # 用numpy向量化运算替代for循环，速度大幅度提升
+        data = self.map_array
+        height, width = data.shape
+
+        # 找出所有空闲格子(值为0)
+        free = (data == 0)
+
+        # 找出上下左右有未知格子(-1)的空闲格子
+        unknown = (data == -1)
+        
+        # 用numpy滚动检测邻居
+        has_unknown_neighbor = (
+            np.roll(unknown, 1, axis=0) |   # 上方
+            np.roll(unknown, -1, axis=0) |  # 下方
+            np.roll(unknown, 1, axis=1) |   # 左方
+            np.roll(unknown, -1, axis=1)    # 右方
+        )
+
+        # frontier = 空闲 且 有未知邻居
+        frontier_mask = free & has_unknown_neighbor
+
+        # 获取frontier的像素坐标
+        ys, xs = np.where(frontier_mask)
+
+        if len(xs) == 0:
+            return []
+
+        # ========== 核心改动：连通域聚类，提取质心 ==========
+        # 对前沿掩码进行连通域标记，每个独立的前沿区域被标为不同整数
+        labeled_mask, num_features = ndimage.label(frontier_mask)
+        
+        # 计算每个区域的质心（返回 (y, x) 索引）
+        centroids = ndimage.center_of_mass(
+            frontier_mask, 
+            labeled_mask, 
+            index=np.arange(1, num_features + 1)
+        )
+        
+        # 转换为世界坐标
+        origin_x = self.map_data.info.origin.position.x
+        origin_y = self.map_data.info.origin.position.y
+        resolution = self.map_data.info.resolution
+
+        frontiers = []
+        for cy, cx in centroids:
+            wx = origin_x + (cx + 0.5) * resolution
+            wy = origin_y + (cy + 0.5) * resolution
+            frontiers.append((wx, wy))
+
+        # （可选）如果极端大场景导致簇数过多（如 > 200），则按物理间距做二次稀疏化
+        # 此步仅为性能兜底，正常情况下不会触发
+        if len(frontiers) > 200:
+            target_spacing = 0.3  # 米
+            step = max(1, int(target_spacing / resolution))
+            frontiers = frontiers[::step]
+
+        return frontiers
+    def find_frontiers(self, min_frontier_size=3):
+        if self.map_data is None or self.map_array is None:
+            return []
+        # 用numpy向量化运算替代for循环，速度大幅度提升
+        data = self.map_array
+        height, width = data.shape
+        # 找出所有空闲格子(值为0)
+        free = (data == 0)
+        # 找出上下左右有未知格子(-1)的空闲格子
+        unknown = (data == -1)
+
+        # 用numpy滚动检测邻居
+        has_unknown_neighbor = (
+            np.roll(unknown, 1, axis=0) |   # 上方
+            np.roll(unknown, -1, axis=0) |  # 下方
+            np.roll(unknown, 1, axis=1) |   # 左方
+            np.roll(unknown, -1, axis=1)    # 右方
+        )
+        # frontier = 空闲 且 有未知邻居
+        frontier_mask = free & has_unknown_neighbor
+
+        if not np.any(frontier_mask):
+            return []
+
+        # 连通域聚类：8邻域连通结构，把相邻的frontier像素归为同一簇
+        structure = np.ones((3, 3), dtype=int)
+        #labeled_array, num_features = ndimage.label(frontier_mask, structure=structure)
+        #labeled_array, num_features = ndimage.label(frontier_mask, structure)
+        labeled_array, num_features = ndimage.label(frontier_mask, structure=structure)  # type: ignore[misc]
+
+        if num_features == 0:
+            return []
+
+        # 世界坐标转换参数
+        origin_x = self.map_data.info.origin.position.x
+        origin_y = self.map_data.info.origin.position.y
+        resolution = self.map_data.info.resolution
+
+        frontiers = []
+        # 对每个连通域计算质心（像素坐标），过滤掉过小的簇（噪声点）
+        # ndimage.center_of_mass 支持一次性计算所有label的质心，比for循环更快
+        labels = np.arange(1, num_features + 1)
+        sizes = ndimage.sum(frontier_mask, labeled_array, labels)
+        valid_labels = labels[sizes >= min_frontier_size]
+
+        if len(valid_labels) == 0:
+            return []
+
+        centroids = ndimage.center_of_mass(frontier_mask, labeled_array, valid_labels)
+
+        for cy, cx in centroids:
+            wx = origin_x + (cx + 0.5) * resolution
+            wy = origin_y + (cy + 0.5) * resolution
+            frontiers.append((wx, wy))
+
+        return frontiers
     def get_nearest_frontier(self, frontiers):
         if not frontiers:
             return None
@@ -130,7 +249,7 @@ class FrontierExplorer(Node):
 
         nearest = min(
             valid_frontiers,
-            key=lambda f: math.sqrt(
+            key=lambda f: (
                 (f[0]-robot_x)**2 + (f[1]-robot_y)**2
             )
         )
