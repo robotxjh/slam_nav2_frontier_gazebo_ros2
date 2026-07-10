@@ -9,7 +9,7 @@ SLAM 自主建图、Nav2 自主导航以及 Frontier 自主探索等完整功能
 
 ## 📺 演示视频
 
-> 待上传
+> https://github.com/robotxjh/slam_nav2_frontier_gazebo_ros2/issues/1#issue-4757472212
 
 ---
 
