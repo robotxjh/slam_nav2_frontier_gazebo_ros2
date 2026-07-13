@@ -24,7 +24,7 @@ def generate_launch_description():
 
     declare_sim_time = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='true',
+        default_value='false',
         description='使用仿真时间'
     )
 
@@ -47,26 +47,30 @@ def generate_launch_description():
         )
     
     # 延迟10秒自动激活SLAM
-    activate_slam = TimerAction(
-        period=10.0,
-        actions=[
-            ExecuteProcess(
-                cmd=['ros2', 'lifecycle', 'set', 
-                    '/async_slam_toolbox_node', 'configure'],
-                output='screen'
-            )
-        ]
-    )
+    # activate_slam = TimerAction(
+    #     period=10.0,
+    #     actions=[
+    #         ExecuteProcess(
+    #             cmd=['ros2', 'lifecycle', 'set', 
+    #                 '/async_slam_toolbox_node', 'configure'],
+    #             output='screen'
+    #         )
+    #     ]
+    # )
 
-    activate_slam2 = TimerAction(
-        period=13.0,
-        actions=[
-            ExecuteProcess(
-                cmd=['ros2', 'lifecycle', 'set',
-                    '/async_slam_toolbox_node', 'activate'],
-                output='screen'
-            )
-        ]
-    )
+    # activate_slam2 = TimerAction(
+    #     period=13.0,
+    #     actions=[
+    #         ExecuteProcess(
+    #             cmd=['ros2', 'lifecycle', 'set',
+    #                 '/async_slam_toolbox_node', 'activate'],
+    #             output='screen'
+    #         )
+    #     ]
+    # )
     
-    return LaunchDescription([declare_sim_time,slam_toolbox_node, activate_slam, activate_slam2])
+    return LaunchDescription([declare_sim_time,
+                              slam_toolbox_node, 
+                              #activate_slam, 
+                              #activate_slam2
+                              ])

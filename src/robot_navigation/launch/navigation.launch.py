@@ -21,7 +21,7 @@ def generate_launch_description():
 
     declare_use_sim_time = DeclareLaunchArgument(
         'use_sim_time',
-        default_value='True',
+        default_value='False',
         description='使用仿真时间'
     )
 
@@ -45,14 +45,16 @@ def generate_launch_description():
             'map': map,
             'params_file': nav2_params_path,
             'use_sim_time': use_sim_time,
-            'autostart': 'True'
+            'autostart': 'True',
+            'slam': 'False',
         }.items()
     )
 
-
+    
     return LaunchDescription([
         declare_use_sim_time,
         declare_map,
         nav2_bringup,
         # lifecycle_manager_navigation
+        
     ])
