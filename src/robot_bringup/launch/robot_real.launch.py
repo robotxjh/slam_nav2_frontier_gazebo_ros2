@@ -62,6 +62,12 @@ def generate_launch_description():
         description='是否启动自主探索'
     )
 
+    declare_rviz = DeclareLaunchArgument(
+        'rviz',
+        default_value='True',
+        description='是否启动rviz'
+    )
+
     # declare_headless = DeclareLaunchArgument(
     #     'headless',
     #     default_value='false',
@@ -72,6 +78,7 @@ def generate_launch_description():
     slam = LaunchConfiguration('slam')
     navigation = LaunchConfiguration('navigation')
     explorer = LaunchConfiguration('explorer')
+    rviz = LaunchConfiguration('rviz')
     # headless = LaunchConfiguration('headless')
 
     slam_launch_node = IncludeLaunchDescription(
@@ -91,6 +98,7 @@ def generate_launch_description():
                 'navigation.launch.py'
             )
         ),
+        # launch_arguments={'slam': slam}.items(),
         condition=IfCondition(navigation)
     )
 
@@ -131,7 +139,8 @@ def generate_launch_description():
         name="rviz2",
         output="screen",
         arguments=['-d', rviz_config_path],
-        parameters=[{"use_sim_time": use_sim_time}]
+        parameters=[{"use_sim_time": use_sim_time}],
+        condition=IfCondition(rviz)
     )
 
     # ros_gz_bridge_node = Node(
@@ -227,6 +236,7 @@ def generate_launch_description():
         declare_slam,
         declare_navigation,
         declare_explorer,
+        declare_rviz,
         #declare_headless,
     
         robot_state_publisher_node,

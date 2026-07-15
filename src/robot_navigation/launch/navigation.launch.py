@@ -31,9 +31,16 @@ def generate_launch_description():
         description='地图yaml文件路径'
     )
 
+    declare_slam = DeclareLaunchArgument(
+        'slam',
+        default_value='False',
+        description='是否启用SLAM建图模式（True时nav2走slam分支，不启动amcl）'
+    )
+    
     map = LaunchConfiguration('map')
     use_sim_time = LaunchConfiguration('use_sim_time')
-    
+    slam = LaunchConfiguration('slam')
+
     nav2_bringup = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(
@@ -46,7 +53,7 @@ def generate_launch_description():
             'params_file': nav2_params_path,
             'use_sim_time': use_sim_time,
             'autostart': 'True',
-            'slam': 'False',
+            'slam': slam,
         }.items()
     )
 
@@ -54,6 +61,7 @@ def generate_launch_description():
     return LaunchDescription([
         declare_use_sim_time,
         declare_map,
+        declare_slam,
         nav2_bringup,
         # lifecycle_manager_navigation
         
