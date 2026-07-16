@@ -218,6 +218,7 @@ def generate_launch_description():
 
     )
 
+    #发布一条"父坐标系到子坐标系的空间变换",因为二者是指同一个物理雷达，故转换量都为0
     laser_frame_bridge = Node(
         package='tf2_ros',
         executable='static_transform_publisher',
