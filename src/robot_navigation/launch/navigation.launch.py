@@ -65,4 +65,5 @@ def generate_launch_description():
         nav2_bringup,
         # lifecycle_manager_navigation
         
-    ])
+    ]
+)

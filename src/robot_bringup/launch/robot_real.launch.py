@@ -143,60 +143,13 @@ def generate_launch_description():
         condition=IfCondition(rviz)
     )
 
-    # ros_gz_bridge_node = Node(
-    # package="ros_gz_bridge",
-    # executable="parameter_bridge",
-    # name="ros_gz_bridge_node",
-    # output="screen",
-    # parameters=[{
-    #     "use_sim_time": use_sim_time,
-    #     "config_file": bridge_config_path
-    # }])
-    
-    # 分支1：无界面 headless:=true,gui=false
-    # gazebo_headless = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(
-    #         os.path.join(get_package_share_path('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
-    #     ),
-    #     launch_arguments=[
-    #         ('gz_args', ['-r -v -s 4 ', worlds_path]),
-    #         ('on_exit_shutdown', 'true'),
-    #     ],
-    #     condition=IfCondition(headless)
-    # )
-
-    # 分支2：正常界面 headless:=false，gui=true
-    # gazebo_gui = IncludeLaunchDescription(
-    #     PythonLaunchDescriptionSource(
-    #         os.path.join(get_package_share_path('ros_gz_sim'), 'launch', 'gz_sim.launch.py')
-    #     ),
-    #     launch_arguments=[
-    #         ('gz_args', ['-r -v 4 ', worlds_path]),
-    #     ],
-    #     condition=UnlessCondition(headless)
-    # )
-
-    # 在 Gazebo 中生成机器人模型
-    # spawn_robot = Node(
-    #     package='ros_gz_sim',
-    #     executable='create',
-    #     arguments=[             #此处不能加name 参数，否则导致产生命名空间，tf树不完整，导致机器人不能转弯
-    #         '-world', 'maze',
-    #         '-topic', 'robot_description',  # 从 robot_state_publisher 获取模型数据
-    #         '-x', '1.5',
-    #         '-y', '1.5',
-    #         '-z', '0.0'  
-    #     ],
-    #     output='screen'
-    # )
-
     odom_relay_node = Node(
-    package='topic_tools',
-    executable='relay',
-    name='odom_relay',
-    arguments=['/odom', '/odom/unfiltered'],
-    output='screen'
-)
+        package='topic_tools',
+        executable='relay',
+        name='odom_relay',
+        arguments=['/odom', '/odom/unfiltered'],
+        output='screen'
+    )
     teleop_node = Node(
         package='teleop_twist_keyboard',
         executable='teleop_twist_keyboard',
@@ -255,5 +208,6 @@ def generate_launch_description():
         odom_relay_node,
         laser_frame_bridge
         
-    ])
+    ]
+)
 
