@@ -1,0 +1,22 @@
+robot_monitor:
+  ros__parameters:
+    window_sec: 2.0
+    report_period_sec: 1.0
+    summary_period_sec: 5.0
+    slow_ratio: 0.7
+    topics: [scan, imu, odom]
+    scan:
+      topic: /scan
+      type: sensor_msgs/msg/LaserScan
+      expected_hz: 10.0
+      timeout_sec: 1.0
+    imu:
+      topic: /imu
+      type: sensor_msgs/msg/Imu
+      expected_hz: 50.0
+      timeout_sec: 0.5
+    odom:
+      topic: /odom
+      type: nav_msgs/msg/Odometry
+      expected_hz: 15.0
+      timeout_sec: 0.5
